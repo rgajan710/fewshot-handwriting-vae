@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Mac system files
+.DS_Store
+
+# Log files
+*.log
+
+# Output and build artifacts
+*.out
+*.exe
+*.so
+*.pyd
+*.pyc
+*.pyo
+
+# Model checkpoints and data outputs
+checkpoints/
+runs/
+outputs/
+*.pt
+*.pth
+
+# Dataset backups or large raw data dumps
+data/raw/
+backup/
+
+# Temporary files
+*.bak
+*.swp
+*.tmp
+
+# Streamlit and Flask cache
+.streamlit/
+__pycache__/
+.cache/
+
+# Test cache
+.pytest_cache/
+coverage/
+
+# Environment files
+*.egg-info/
+dist/
+build/
+s
