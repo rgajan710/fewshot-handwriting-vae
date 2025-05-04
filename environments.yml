@@ -1,0 +1,11 @@
+name: handwriting-vae
+dependencies:
+  - python=3.10
+  - pytorch
+  - torchvision
+  - matplotlib
+  - opencv
+  - pip
+  - pip:
+      - streamlit
+      - flake8
