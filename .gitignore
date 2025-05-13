@@ -36,8 +36,9 @@ outputs/
 *.pth
 
 # Dataset backups or large raw data dumps
-data/raw/
+data/raw/*
 backup/
+!data/raw/.gitkeep
 
 # Temporary files
 *.bak
