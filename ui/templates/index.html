@@ -39,7 +39,11 @@
             <div class="preview-section">
                 <h2>Test Your Font</h2>
                 <textarea id="test-text" placeholder="Type something to test your font..."></textarea>
-                <button id="generate-btn" class="primary-btn">Generate Font</button>
+                <div class="font-preview-container">
+                    <img id="font-preview" style="display: none;" alt="Generated Font Preview">
+                    <p id="preview-text" class="preview-text"></p>
+                </div>
+                <button id="generate-btn" class="primary-btn" disabled>Generate Font</button>
             </div>
         </div>
     </div>

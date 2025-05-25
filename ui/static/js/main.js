@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewImage = document.getElementById('preview-image');
     const generateBtn = document.getElementById('generate-btn');
     const languageSelect = document.getElementById('language-select');
+    const testText = document.getElementById('test-text');
+    const fontPreview = document.getElementById('font-preview');
 
     // Drag and drop handlers
     dropZone.addEventListener('dragover', (e) => {
@@ -51,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 previewImage.src = URL.createObjectURL(file);
                 preview.style.display = 'block';
+                generateBtn.disabled = false;
             } else {
                 alert(data.error || 'Upload failed');
             }
@@ -64,6 +67,18 @@ document.addEventListener('DOMContentLoaded', function() {
     generateBtn.addEventListener('click', () => {
         const formData = new FormData();
         formData.append('language', languageSelect.value);
+        formData.append('text', testText.value);
+        
+        // Get the latest uploaded image
+        const latestImage = fileInput.files[0];
+        if (!latestImage) {
+            alert('Please upload a handwriting sample first');
+            return;
+        }
+        formData.append('image', latestImage);
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
 
         fetch('/generate', {
             method: 'POST',
@@ -71,8 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate Font';
+            
             if (data.success) {
-                alert('Font generation started!');
+                fontPreview.style.display = 'block';
+                fontPreview.src = `/static/generated/${data.generated_font}`;
+                
+                // Apply generated font to test text
+                if (data.preview_text) {
+                    const previewText = document.getElementById('preview-text');
+                    previewText.textContent = data.preview_text;
+                    previewText.style.fontFamily = 'generated-font';
+                }
             } else {
                 alert(data.error || 'Generation failed');
             }
@@ -80,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
             alert('Generation failed');
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate Font';
         });
     });
 });
