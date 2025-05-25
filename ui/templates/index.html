@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwriting Font Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✍️ Handwriting Font Generator</h1>
+        </header>
+
+        <div class="main-content">
+            <div class="settings-panel">
+                <h2>Settings</h2>
+                <select id="language-select">
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                </select>
+            </div>
+
+            <div class="upload-section">
+                <h2>Upload Handwriting Sample</h2>
+                <div class="upload-area" id="drop-zone">
+                    <input type="file" id="file-input" accept=".png,.jpg,.jpeg" hidden>
+                    <div class="upload-prompt">
+                        <p>Drag and drop your handwriting sample here</p>
+                        <p>or</p>
+                        <button onclick="document.getElementById('file-input').click()">Choose File</button>
+                    </div>
+                </div>
+                <div id="preview" class="preview-area" style="display: none;">
+                    <img id="preview-image" src="" alt="Preview">
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h2>Test Your Font</h2>
+                <textarea id="test-text" placeholder="Type something to test your font..."></textarea>
+                <button id="generate-btn" class="primary-btn">Generate Font</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

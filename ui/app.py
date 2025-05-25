@@ -1,78 +1,48 @@
-import streamlit as st
-import cv2
-import numpy as np
-from pathlib import Path
+from flask import Flask, render_template, request, jsonify
+import os
+from werkzeug.utils import secure_filename
 
-st.set_page_config(
-    page_title="Handwriting Font Generator",
-    page_icon="✍️",
-    layout="wide"
-)
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-def main():
-    st.title("✍️ Handwriting Font Generator")
+# Ensure upload directory exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
     
-    # Sidebar for language selection
-    with st.sidebar:
-        st.header("Settings")
-        language = st.selectbox(
-            "Choose Language",
-            ["English", "Hindi"],
-            index=0
-        )
-        
-        st.markdown("---")
-        st.markdown("""
-        ### How to use:
-        1. Select your language
-        2. Upload sample handwriting
-        3. Generate your custom font!
-        """)
-
-    # Main content area
-    col1, col2 = st.columns([1, 1])
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
     
-    with col1:
-        st.subheader("Upload Handwriting Sample")
-        uploaded_file = st.file_uploader(
-            "Upload a clear image of your handwriting",
-            type=["png", "jpg", "jpeg"],
-            help="Upload a clear, well-lit image of your handwriting"
-        )
-        
-        if uploaded_file:
-            st.image(uploaded_file, caption="Uploaded Sample", use_column_width=True)
-            
-            # Sample text input
-            sample_text = st.text_area(
-                "Test your font",
-                value="Hello World!" if language == "English" else "नमस्ते दुनिया!",
-                height=100
-            )
-            
-            if st.button("Generate Font", type="primary"):
-                with st.spinner("Generating your custom font..."):
-                    # Placeholder for font generation logic
-                    st.success("Font generated successfully!")
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        return jsonify({'success': True, 'filename': filename})
     
-    with col2:
-        st.subheader("Preview")
-        st.markdown("""
-        Your generated font will appear here.
-        
-        Currently supported characters:
-        - A-Z (uppercase)
-        - a-z (lowercase)
-        - 0-9
-        - Basic punctuation
-        """)
-        
-        # Preview area with a light gray background
-        st.markdown("""
-        <div style='background-color: #f5f5f5; padding: 20px; border-radius: 10px; min-height: 200px;'>
-            Preview will appear here after generation
-        </div>
-        """, unsafe_allow_html=True)
+    return jsonify({'error': 'Invalid file type'}), 400
 
-if __name__ == "__main__":
-    main()
+@app.route('/generate', methods=['POST'])
+def generate_font():
+    language = request.form.get('language', 'english')
+    # Placeholder for font generation logic
+    return jsonify({
+        'success': True,
+        'message': f'Font generation requested for {language}'
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)

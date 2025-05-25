@@ -5,3 +5,5 @@ opencv-python
 streamlit
 pytest
 flake8
+flask
+werkzeug
